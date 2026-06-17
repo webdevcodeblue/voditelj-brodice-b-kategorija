@@ -1,0 +1,12 @@
+# OS / editor
+Thumbs.db
+.DS_Store
+desktop.ini
+.vscode/
+
+# Claude
+.claude/
+memory/
+
+# Izvorni PDF-ovi (gradivo, ne idu u repo)
+*.pdf
