@@ -107,6 +107,23 @@
   .toolbtn{background:none; border:1px solid var(--line); color:var(--muted); padding:7px 12px; border-radius:10px; font-size:13px; cursor:pointer;}
   a.link{color:var(--accent);}
   .swipe-hint{font-size:12px; color:var(--muted); text-align:center; margin-top:6px;}
+
+  .tab{padding:9px 2px; font-size:12px;}
+  .tab .ico{font-size:17px;}
+
+  /* TOP / najvažnije */
+  .star{color:var(--gold);}
+  .badge2{background:rgba(232,87,107,.18); color:#ff9aa8; border:1px solid rgba(232,87,107,.4);}
+  .badge1{background:rgba(240,164,0,.16); color:var(--gold); border:1px solid rgba(240,164,0,.35);}
+  .topitem{padding:15px 0; border-bottom:1px solid var(--line);}
+  .topitem:last-child{border-bottom:none;}
+  .topitem .qq{font-weight:600; font-size:16px; margin:7px 0 9px; cursor:pointer; display:flex; gap:8px; align-items:flex-start;}
+  .topitem .qq .ar{color:var(--muted); transition:.2s; flex:none;}
+  .topitem.open .qq .ar{transform:rotate(90deg);}
+  .topitem .body{display:none;}
+  .topitem.open .body{display:block;}
+  .topintro{background:rgba(232,87,107,.1); border-left:3px solid var(--bad); padding:12px 14px; border-radius:9px; font-size:14px; margin-bottom:14px;}
+  .seccat{margin:22px 0 8px; font-size:14px; color:var(--muted); font-weight:600; letter-spacing:.3px; text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -114,6 +131,7 @@
   <h1>⛵ Voditelj brodice B <small id="hdrsub">— pripreme za ispit</small></h1>
   <div class="tabs">
     <div class="tab active" data-view="home"><span class="ico">🏠</span>Početna</div>
+    <div class="tab" data-view="top"><span class="ico">⭐</span>Najvažnije</div>
     <div class="tab" data-view="learn"><span class="ico">🎴</span>Uči</div>
     <div class="tab" data-view="search"><span class="ico">🔍</span>Traži</div>
     <div class="tab" data-view="stats"><span class="ico">📊</span>Napredak</div>
@@ -130,12 +148,32 @@
       <p class="muted" style="font-size:14px; margin:12px 0 0">Odaberi kategoriju za učenje, ili učvrsti sve odjednom. Tvoj napredak se pamti na ovom uređaju.</p>
     </div>
 
+    <button class="btn block" id="gotop" style="background:linear-gradient(90deg,#e8576b,#f0a400);margin-bottom:14px">⭐ Kreni od NAJVAŽNIJEG (za ispit)</button>
+
     <div class="catgrid" id="catgrid"></div>
 
     <button class="btn block" id="allbtn" style="margin-top:6px">🎯 Uči SVE kategorije zajedno</button>
     <button class="btn sec block" id="weakbtn" style="margin-top:10px">🔁 Ponavljaj samo ono što NE znam</button>
 
     <p class="footnote">156 pitanja iz 5 područja · Sea Master gradivo<br>Sretno na ispitu! 🍀</p>
+  </div>
+
+  <!-- ============ TOP / NAJVAŽNIJE ============ -->
+  <div id="view-top" class="hidden">
+    <div class="card">
+      <h2 style="margin:0 0 6px;font-size:18px">⭐ Najvažnije za ispit</h2>
+      <div class="topintro">
+        Na temelju <b>zapisnika ispita</b> i <b>iskustava polaznika</b>. Eliminacijski su <b>karta</b> i <b>svjetla + izbjegavanje sudara</b> — na tome najviše ljudi padne.
+        <br><span class="pill badge2" style="margin:8px 4px 0 0">🔴 MORAŠ znati</span>
+        <span class="pill badge1" style="margin-top:8px">🟡 Vrlo važno</span>
+      </div>
+      <div class="row" style="margin-bottom:4px">
+        <button class="btn" id="topflash">🎴 Uči samo najvažnije</button>
+        <button class="btn sec" id="topexpand">📖 Raz/sklopi sve</button>
+      </div>
+    </div>
+    <div class="card" id="toplist"></div>
+    <p class="footnote">Savjet: kod koordinata UVIJEK reci stranu (N/S, E/W).<br>Kod prednosti — desna strana ima prednost. Kod MOB-a — ugasi motor!</p>
   </div>
 
   <!-- ============ LEARN (kviz/kartice) ============ -->
@@ -219,8 +257,8 @@
 
 <script src="data.js"></script>
 <script>
-// ---------- index svakom pitanju ----------
-PITANJA.forEach((p,i)=>p.id=i);
+// ---------- index svakom pitanju (data.js to već radi, ovo je sigurnosna mreža) ----------
+PITANJA.forEach((p,i)=>{ if(p.id===undefined) p.id=i; });
 
 // ---------- napredak (localStorage) ----------
 const LS_KEY="vbB_progress_v1";
@@ -241,11 +279,12 @@ function globalCount(){
 }
 
 // ---------- view switching ----------
-const views=["home","learn","search","stats"];
+const views=["home","top","learn","search","stats"];
 function show(v){
   views.forEach(x=>document.getElementById("view-"+x).classList.toggle("hidden",x!==v));
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===v));
   if(v==="home") renderHome();
+  if(v==="top") renderTop();
   if(v==="stats") renderStats();
   if(v==="learn") { /* keeps state */ }
   window.scrollTo(0,0);
@@ -276,6 +315,48 @@ function renderHome(){
 }
 document.getElementById("allbtn").onclick=()=>startLearn("ALL");
 document.getElementById("weakbtn").onclick=()=>startLearn("WEAK");
+document.getElementById("gotop").onclick=()=>show("top");
+
+// ---------- TOP / NAJVAŽNIJE ----------
+function topQuestions(){
+  // razina 2 prvo, pa razina 1; grupirano po kategoriji unutar svake razine
+  const t2=PITANJA.filter(p=>p.top===2);
+  const t1=PITANJA.filter(p=>p.top===1);
+  return {t2,t1};
+}
+function renderTop(){
+  const {t2,t1}=topQuestions();
+  const box=document.getElementById("toplist");
+  box.innerHTML="";
+  function section(title,arr,badgeClass,emoji){
+    if(!arr.length) return;
+    const h=document.createElement("div");
+    h.className="seccat";
+    h.textContent=emoji+" "+title+" ("+arr.length+")";
+    box.appendChild(h);
+    arr.forEach(q=>{
+      const el=document.createElement("div");
+      el.className="topitem";
+      el.innerHTML=`<span class="pill ${badgeClass}">${catName(q.kat)}</span>
+        <div class="qq"><span class="ar">▶</span><span>${q.p}</span></div>
+        <div class="body">
+          <div class="ans kratko" style="margin-bottom:8px">💡 ${q.kratko}</div>
+          <details><summary class="muted" style="cursor:pointer;font-size:14px">📖 Cijeli odgovor</summary>
+          <div class="ans pun" style="margin-top:8px">${q.pun}</div></details>
+        </div>`;
+      el.querySelector(".qq").onclick=()=>el.classList.toggle("open");
+      box.appendChild(el);
+    });
+  }
+  section("MORAŠ znati (eliminacijsko / najčešće)",t2,"badge2","🔴");
+  section("Vrlo važno",t1,"badge1","🟡");
+}
+document.getElementById("topflash").onclick=()=>startLearn("TOP");
+document.getElementById("topexpand").onclick=()=>{
+  const items=document.querySelectorAll("#toplist .topitem");
+  const anyClosed=[...items].some(i=>!i.classList.contains("open"));
+  items.forEach(i=>i.classList.toggle("open",anyClosed));
+};
 
 // ---------- LEARN setup ----------
 let curFilter="ALL";    // catId | ALL | WEAK
@@ -284,11 +365,13 @@ let curMode="flash";    // flash | summary
 function filterLabel(){
   if(curFilter==="ALL") return "Sve kategorije";
   if(curFilter==="WEAK") return "Samo ono što ne znam";
+  if(curFilter==="TOP") return "⭐ Najvažnija pitanja";
   const c=KATEGORIJE.find(k=>k.id===curFilter); return c?c.naziv:"";
 }
 function getDeck(){
   if(curFilter==="ALL") return PITANJA.slice();
   if(curFilter==="WEAK") return PITANJA.filter(p=>!known(p.id));
+  if(curFilter==="TOP") return PITANJA.filter(p=>p.top); // razina 1 i 2
   return PITANJA.filter(p=>p.kat===curFilter);
 }
 function catName(id){const c=KATEGORIJE.find(k=>k.id===id);return c?c.emoji+" "+c.naziv:"";}

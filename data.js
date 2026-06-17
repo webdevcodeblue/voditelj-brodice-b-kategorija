@@ -478,4 +478,82 @@ const PITANJA = [
   { kat: "rtf", p: "Što je EPIRB, a što SART plutača?",
     kratko: "EPIRB: radio-plutača (406 MHz, COSPAS/SARSAT) — emitira poziciju i MMSI 48 h. SART: radarski transponder — vidi se na radaru, 96 h prijem + 8 h predaje, min. 1 m iznad mora.",
     pun: "EPIRB (Emergency Position Indicating Radio Beacon): plutača koja na 406 MHz (sustav COSPAS/SARSAT, 12 satelita) emitira koordinate pozicije i MMSI, aktivira se ručno ili automatski u moru, radi 48 h. SART (Search and Rescue Transponder): radarski transponder čija se pozicija vidi kao odraz na radaru; napajanje 96 h u prijemu + 8 h predaje; pri korištenju min. 1 m iznad površine mora." },
+
+  // ===== DODATNA ČESTO-PITANA PITANJA (iz iskustava s ispita) =====
+  { kat: "man", p: "Dva broda na motor susreću se otprilike pod pravim kutom (križaju kurseve) — tko ima prednost?",
+    kratko: "Prednost ima brod kojem ti dolaziš S DESNE strane. Ti se sklanjaš onome tko ti je zdesna (skrećeš desno, prolaziš iza njega).",
+    pun: "Kad se dva broda na mehanički pogon križaju tako da postoji opasnost sudara, prednost (pravo puta) ima onaj brod koji drugome dolazi s DESNE strane. Brod koji vidi drugi brod sa svoje desne strane dužan mu se je ukloniti i, ako je moguće, izbjegavati presijecanje pramca ispred njega — skreće udesno i prolazi iza njega. (Pravilo desne strane.)" },
+  { kat: "pom", p: "Tko sve, osim brodova, ima ograničenje od 300 m za plovidbu/polijetanje uz obalu?",
+    kratko: "HIDROAVION (hidroavioni i hidroletjelice) — smiju polijetati/slijetati više od 300 m od obale, kao i gliseri.",
+    pun: "Osim glisera koji glisiraju, ograničenje od 300 m od obale odnosi se i na HIDROAVIONE (hidroletjelice) — oni smiju polijetati i slijetati samo dalje od 300 m od obale ili ograđenog kupališta. (Često 'trik' pitanje na ispitu.)" },
+  { kat: "pom", p: "Kako se izrađuje čvor pašnjak i čemu služi?",
+    kratko: "Petlja koja se ne zateže (fiksna omča). 'Zec izađe iz rupe, oko stabla, vrati se u rupu.' Za privez, omču oko bitve, spašavanje.",
+    pun: "Pašnjak (bowline) je čvor koji daje fiksnu omču koja se ne zateže pod opterećenjem i lako se razvezuje. Postupak: napraviš malu petlju ('rupu'), kraj užeta provučeš kroz nju odozdo ('zec izađe iz rupe'), obiđeš oko glavnog kraja ('oko stabla') i vratiš natrag kroz petlju ('u rupu'). Služi za privez, stvaranje omče oko bitve/stupa, spašavanje osobe iz mora. Na ispitu se najčešće traži upravo pašnjak." },
+  { kat: "rtf", p: "Koga dobivamo na broju 195 (puni naziv službe)?",
+    kratko: "Nacionalnu središnjicu za usklađivanje traganja i spašavanja na moru — MRCC Rijeka.",
+    pun: "Broj 195 spaja na Nacionalnu središnjicu za usklađivanje traganja i spašavanja na moru (MRCC Rijeka – Maritime Rescue Co-ordination Centre). Ona koordinira sve akcije traganja i spašavanja na Jadranu. Alternativa je 112, odnosno VHF kanal 16." },
 ];
+
+// Označi pitanja indeksom (mora biti nakon definicije PITANJA)
+PITANJA.forEach((p, i) => p.id = i);
+
+// ⭐ NAJVAŽNIJA / ELIMINACIJSKA PITANJA
+// Odabrano na temelju zapisnika ispita (eliminacijski dijelovi: karta + manevriranje/svjetla)
+// i stvarnih iskustava polaznika (Reddit, Sea Master). Ovo su pitanja koja MORAŠ znati.
+// Razina 2 = apsolutno ključno (najčešće pitano / eliminacijsko), razina 1 = vrlo važno.
+const TOP_2 = [ // apsolutni prioritet
+  0,   // mjerenje udaljenosti na karti
+  2,   // pronaći poziciju iz koordinata
+  7,   // očitati koordinate + φ/λ (NE zaboravi N/E!)
+  24,  // lateralne oznake (crvena/zelena)
+  27,  // kardinalne oznake
+  5,   // očitati kurs na ruži
+  99,  // boje/kutovi svjetala broda
+  92,  // svjetla jedrenjaka do 20 m
+  95,  // svjetla motorne brodice do 7 m
+  97,  // svjetla usidrenog broda
+  153, // pravilo desne strane (prednost)
+  105, // protukurs
+  116, // hijerarhija: ribarica > jedrilica > motorni
+  98,  // isplovljavanje ima prednost
+  70,  // glisiranje > 300 m
+  155, // čvor pašnjak
+  72,  // bura
+  135, // VHF kanal 16
+  142, // postupak MAYDAY
+  127, // 3 prioritetna poziva
+  125, // fonetska tablica
+  122, // broj 195
+];
+const TOP_1 = [ // vrlo važno
+  4,   // karakteristika svjetionika
+  16, 17, // kurs / azimut
+  23,  // usamljena opasnost
+  8,   // kablovi/cjevovodi
+  19,  // valovita linija = kabel
+  29,  // magnetski vs žirokompas
+  102, // zvučni signali
+  103, // dnevna oznaka usidrenog (kugla)
+  106, // pretjecanje
+  117, // čovjek u moru (ugasi motor!)
+  118, // signali opasnosti
+  119, // prsluk za spašavanje
+  111, // sidrenje
+  110, // dužina sidrenjaka
+  41,  // radni takt motora
+  49, 52, // podjela/vrste motora
+  43,  // hlađenje motora
+  55,  // akumulatori
+  50,  // motor se dimi/zapali
+  65,  // definicija brodice/jahte
+  69,  // dozvola + područja plovidbe
+  81,  // čime smije B kategorija
+  73, 74, 76, // jugo, maestral, vjetrovi
+  132, // dijelovi VHF stanice
+  134, // MAYDAY/PAN PAN/SECURITE
+  146, // MMSI (238)
+  156, // MRCC Rijeka puni naziv
+  154, // hidroavion 300 m
+];
+TOP_2.forEach(i => { if (PITANJA[i]) PITANJA[i].top = 2; });
+TOP_1.forEach(i => { if (PITANJA[i] && !PITANJA[i].top) PITANJA[i].top = 1; });
