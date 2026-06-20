@@ -8,5 +8,22 @@ desktop.ini
 .claude/
 memory/
 
-# Izvorni PDF-ovi (gradivo, ne idu u repo)
+# Izvorni materijali / gradivo (ne idu u repo)
 *.pdf
+*.odt
+*.doc
+*.docx
+*.txt
+
+# Slike i grafika (osobne datoteke, ne idu u repo)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.psd
+*.tif
+*.tiff
+*.webp
+
+# Ostale mape s materijalima
+Linkovi itd/
