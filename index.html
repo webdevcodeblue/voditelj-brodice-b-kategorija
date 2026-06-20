@@ -124,6 +124,27 @@
   .topitem.open .body{display:block;}
   .topintro{background:rgba(232,87,107,.1); border-left:3px solid var(--bad); padding:12px 14px; border-radius:9px; font-size:14px; margin-bottom:14px;}
   .seccat{margin:22px 0 8px; font-size:14px; color:var(--muted); font-weight:600; letter-spacing:.3px; text-transform:uppercase;}
+
+  /* Sricanje */
+  .subtabs{display:flex; gap:8px; margin-bottom:14px;}
+  .subtabs .btn{flex:1; font-size:14px; padding:11px;}
+  .bigletter{font-size:64px; font-weight:800; text-align:center; color:var(--accent); margin:8px 0;}
+  .codeword{font-size:30px; font-weight:700; text-align:center; color:var(--gold);}
+  .codepron{font-size:17px; text-align:center; color:var(--muted); margin-top:4px; letter-spacing:1px;}
+  .ftable{width:100%; border-collapse:collapse; font-size:15px;}
+  .ftable td{padding:9px 8px; border-bottom:1px solid var(--line);}
+  .ftable td:first-child{font-weight:800; color:var(--accent); width:38px; font-size:18px; text-align:center;}
+  .ftable td:nth-child(2){font-weight:600; color:var(--gold);}
+  .ftable td:last-child{color:var(--muted); font-size:13px; letter-spacing:.5px;}
+  .ftable tr:active{background:rgba(255,255,255,.04);}
+  .spellword{font-size:30px; font-weight:800; text-align:center; letter-spacing:3px; margin:6px 0 2px;}
+  .spellanswer{margin-top:14px;}
+  .spellanswer .line{display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--line); align-items:center;}
+  .spellanswer .ll{font-weight:800; color:var(--accent); width:30px; font-size:18px;}
+  .spellanswer .lw{font-weight:600;}
+  .spellanswer .lp{color:var(--muted); font-size:12px; margin-left:auto;}
+  .ok{color:var(--good);} .err{color:var(--bad);}
+  .feedback{text-align:center; font-weight:700; font-size:18px; margin:10px 0;}
 </style>
 </head>
 <body>
@@ -131,10 +152,11 @@
   <h1>⛵ Voditelj brodice B <small id="hdrsub">— pripreme za ispit</small></h1>
   <div class="tabs">
     <div class="tab active" data-view="home"><span class="ico">🏠</span>Početna</div>
-    <div class="tab" data-view="top"><span class="ico">⭐</span>Najvažnije</div>
+    <div class="tab" data-view="top"><span class="ico">⭐</span>Bitno</div>
     <div class="tab" data-view="learn"><span class="ico">🎴</span>Uči</div>
+    <div class="tab" data-view="spell"><span class="ico">📻</span>Sricanje</div>
     <div class="tab" data-view="search"><span class="ico">🔍</span>Traži</div>
-    <div class="tab" data-view="stats"><span class="ico">📊</span>Napredak</div>
+    <div class="tab" data-view="stats"><span class="ico">📊</span>Napred.</div>
   </div>
 </header>
 
@@ -174,6 +196,60 @@
     </div>
     <div class="card" id="toplist"></div>
     <p class="footnote">Savjet: kod koordinata UVIJEK reci stranu (N/S, E/W).<br>Kod prednosti — desna strana ima prednost. Kod MOB-a — ugasi motor!</p>
+  </div>
+
+  <!-- ============ SRICANJE ============ -->
+  <div id="view-spell" class="hidden">
+    <div class="card">
+      <h2 style="margin:0 0 4px;font-size:18px">📻 Sricanje (fonetska tablica)</h2>
+      <p class="muted" style="font-size:13px;margin:0 0 12px">
+        Slova i brojevi sriču se po međunarodnoj tablici da se izbjegnu zabune u radio-prometu (npr. B = Bravo).
+      </p>
+      <div class="subtabs">
+        <button class="btn" data-spell="table">📖 Uči tablicu</button>
+        <button class="btn sec" data-spell="letter">🎴 Pogodi slovo</button>
+        <button class="btn sec" data-spell="word">✍️ Sriči riječ</button>
+      </div>
+    </div>
+
+    <!-- 1) Tablica za učenje -->
+    <div id="spell-table" class="card">
+      <table class="ftable"><tbody id="ftbody"></tbody></table>
+      <p class="footnote" style="margin:14px 0 0">Tap na red da sakriješ/pokažeš kodnu riječ.</p>
+    </div>
+
+    <!-- 2) Pogodi kodnu riječ za slovo -->
+    <div id="spell-letter" class="hidden">
+      <div class="pcount"><span class="muted" id="lprog"></span><span class="muted" id="lscore"></span></div>
+      <div class="card" style="min-height:160px">
+        <p class="muted center" style="margin:0">Koje je kodna riječ za:</p>
+        <div class="bigletter" id="lchar">A</div>
+        <div id="lreveal" class="hidden">
+          <div class="codeword" id="lword"></div>
+          <div class="codepron" id="lpron"></div>
+        </div>
+      </div>
+      <button class="btn block" id="lrevealbtn">👁️ Pokaži</button>
+      <div class="row hidden" id="lmarkrow" style="margin-top:10px">
+        <button class="btn bad" id="lnext">➡️ Dalje (nova)</button>
+      </div>
+    </div>
+
+    <!-- 3) Sriči zadanu riječ -->
+    <div id="spell-word" class="hidden">
+      <div class="card">
+        <p class="muted center" style="margin:0 0 4px">Sriči ovu riječ po tablici:</p>
+        <div class="spellword" id="wword">BROD</div>
+        <p class="muted center" style="font-size:12px;margin:2px 0 12px">Upiši kodne riječi odvojene razmakom (npr. <i>Bravo Romeo Oscar Delta</i>)</p>
+        <input type="text" id="winput" placeholder="Bravo Romeo Oscar Delta…" autocomplete="off" autocapitalize="words">
+        <div class="row" style="margin-top:12px">
+          <button class="btn" id="wcheck">✅ Provjeri</button>
+          <button class="btn sec" id="wnew">🔄 Nova riječ</button>
+        </div>
+        <div class="feedback" id="wfeedback"></div>
+        <div class="spellanswer hidden" id="wsolution"></div>
+      </div>
+    </div>
   </div>
 
   <!-- ============ LEARN (kviz/kartice) ============ -->
@@ -279,12 +355,13 @@ function globalCount(){
 }
 
 // ---------- view switching ----------
-const views=["home","top","learn","search","stats"];
+const views=["home","top","learn","spell","search","stats"];
 function show(v){
   views.forEach(x=>document.getElementById("view-"+x).classList.toggle("hidden",x!==v));
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===v));
   if(v==="home") renderHome();
   if(v==="top") renderTop();
+  if(v==="spell") initSpell();
   if(v==="stats") renderStats();
   if(v==="learn") { /* keeps state */ }
   window.scrollTo(0,0);
@@ -534,6 +611,109 @@ document.getElementById("resetbtn").onclick=()=>{
     progress={}; save(); renderStats(); renderHome();
   }
 };
+
+// ---------- SRICANJE ----------
+const FMAP={}; FONETSKA.forEach(f=>FMAP[f.znak]=f);
+let spellInit=false;
+function initSpell(){
+  if(!spellInit){ buildFTable(); spellInit=true; }
+  setSpellMode("table");
+}
+function setSpellMode(m){
+  document.querySelectorAll("#view-spell .subtabs .btn").forEach(b=>b.classList.toggle("sec",b.dataset.spell!==m));
+  document.getElementById("spell-table").classList.toggle("hidden",m!=="table");
+  document.getElementById("spell-letter").classList.toggle("hidden",m!=="letter");
+  document.getElementById("spell-word").classList.toggle("hidden",m!=="word");
+  if(m==="letter") newLetter(true);
+  if(m==="word") newWord();
+}
+document.querySelectorAll("#view-spell .subtabs .btn").forEach(b=>b.onclick=()=>setSpellMode(b.dataset.spell));
+
+// -- 1) Tablica --
+function buildFTable(){
+  const tb=document.getElementById("ftbody");
+  tb.innerHTML="";
+  FONETSKA.forEach(f=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${f.znak}</td><td class="cw">${f.rijec}</td><td class="cp">${f.izgovor}</td>`;
+    tr.onclick=()=>{
+      const cw=tr.querySelector(".cw"), cp=tr.querySelector(".cp");
+      const hidden=cw.dataset.hid==="1";
+      if(hidden){ cw.textContent=f.rijec; cp.textContent=f.izgovor; cw.dataset.hid="0"; }
+      else{ cw.textContent="• • •"; cp.textContent=""; cw.dataset.hid="1"; }
+    };
+    tb.appendChild(tr);
+  });
+}
+
+// -- 2) Pogodi slovo --
+let lpool=[], lpos=0, lright=0, ltotal=0;
+function newLetter(reset){
+  if(reset){ lpool=FONETSKA.slice(); for(let i=lpool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[lpool[i],lpool[j]]=[lpool[j],lpool[i]];} lpos=0; lright=0; ltotal=0; }
+  if(lpos>=lpool.length){ lpool=FONETSKA.slice(); for(let i=lpool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[lpool[i],lpool[j]]=[lpool[j],lpool[i]];} lpos=0; }
+  const f=lpool[lpos];
+  document.getElementById("lchar").textContent=f.znak;
+  document.getElementById("lword").textContent=f.rijec;
+  document.getElementById("lpron").textContent=f.izgovor;
+  document.getElementById("lreveal").classList.add("hidden");
+  document.getElementById("lrevealbtn").classList.remove("hidden");
+  document.getElementById("lmarkrow").classList.add("hidden");
+  document.getElementById("lprog").textContent="Znak "+(lpos+1)+" / "+lpool.length;
+  document.getElementById("lscore").textContent="";
+}
+document.getElementById("lrevealbtn").onclick=()=>{
+  document.getElementById("lreveal").classList.remove("hidden");
+  document.getElementById("lrevealbtn").classList.add("hidden");
+  document.getElementById("lmarkrow").classList.remove("hidden");
+};
+document.getElementById("lnext").onclick=()=>{ lpos++; newLetter(false); };
+
+// -- 3) Sriči riječ --
+let curWord="";
+function normalize(s){
+  return s.toLowerCase()
+    .replace(/[\s\-]+/g," ")
+    .replace(/đ/g,"dj").replace(/č|ć/g,"c").replace(/š/g,"s").replace(/ž/g,"z")
+    .trim();
+}
+function expected(word){
+  return word.split("").map(ch=>FMAP[ch]?FMAP[ch].rijec:ch);
+}
+function newWord(){
+  curWord=VJEZBA_RIJECI[Math.floor(Math.random()*VJEZBA_RIJECI.length)];
+  document.getElementById("wword").textContent=curWord;
+  document.getElementById("winput").value="";
+  document.getElementById("wfeedback").textContent="";
+  document.getElementById("wsolution").classList.add("hidden");
+  document.getElementById("winput").focus();
+}
+function checkWord(){
+  const exp=expected(curWord);
+  const userTokens=document.getElementById("winput").value.trim().split(/[\s,]+/).filter(Boolean);
+  const sol=document.getElementById("wsolution");
+  sol.classList.remove("hidden");
+  sol.innerHTML="";
+  let allOk=exp.length===userTokens.length;
+  exp.forEach((codeWord,i)=>{
+    const ch=curWord[i];
+    const userTok=userTokens[i]||"";
+    const ok = normalize(userTok)===normalize(codeWord);
+    if(!ok) allOk=false;
+    const line=document.createElement("div");
+    line.className="line";
+    line.innerHTML=`<span class="ll">${ch}</span>
+      <span class="lw ${ok?'ok':'err'}">${codeWord}</span>
+      <span class="lp">${ok?'✅':(userTok?'✗ ti: '+escTxt(userTok):'✗ prazno')}</span>`;
+    sol.appendChild(line);
+  });
+  const fb=document.getElementById("wfeedback");
+  if(allOk){ fb.textContent="🎉 Točno! Bravo!"; fb.className="feedback ok"; }
+  else { fb.textContent="Skoro — pogledaj ispravak ispod"; fb.className="feedback err"; }
+}
+function escTxt(s){return s.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]));}
+document.getElementById("wcheck").onclick=checkWord;
+document.getElementById("wnew").onclick=newWord;
+document.getElementById("winput").addEventListener("keydown",e=>{ if(e.key==="Enter") checkWord(); });
 
 // ---------- init ----------
 renderHome();

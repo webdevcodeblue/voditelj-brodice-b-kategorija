@@ -557,3 +557,53 @@ const TOP_1 = [ // vrlo važno
 ];
 TOP_2.forEach(i => { if (PITANJA[i]) PITANJA[i].top = 2; });
 TOP_1.forEach(i => { if (PITANJA[i] && !PITANJA[i].top) PITANJA[i].top = 1; });
+
+// ===================== MEĐUNARODNA FONETSKA TABLICA ZA SRICANJE =====================
+// znak: slovo/broj | rijec: kodna riječ | izgovor: kako se izgovara
+const FONETSKA = [
+  { znak: "A", rijec: "Alfa",     izgovor: "AL FA" },
+  { znak: "B", rijec: "Bravo",    izgovor: "BRA VO" },
+  { znak: "C", rijec: "Charlie",  izgovor: "ČAR LI" },
+  { znak: "D", rijec: "Delta",    izgovor: "DEL TA" },
+  { znak: "E", rijec: "Echo",     izgovor: "EK O" },
+  { znak: "F", rijec: "Foxtrot",  izgovor: "FOKS TROT" },
+  { znak: "G", rijec: "Golf",     izgovor: "GOLF" },
+  { znak: "H", rijec: "Hotel",    izgovor: "HO TEL" },
+  { znak: "I", rijec: "India",    izgovor: "IN DI A" },
+  { znak: "J", rijec: "Juliet",   izgovor: "ĐU LI ET" },
+  { znak: "K", rijec: "Kilo",     izgovor: "KI LO" },
+  { znak: "L", rijec: "Lima",     izgovor: "LI MA" },
+  { znak: "M", rijec: "Mike",     izgovor: "MAJK" },
+  { znak: "N", rijec: "November", izgovor: "NO VEM BER" },
+  { znak: "O", rijec: "Oscar",    izgovor: "OS KAR" },
+  { znak: "P", rijec: "Papa",     izgovor: "PA PA" },
+  { znak: "Q", rijec: "Quebec",   izgovor: "KVI BEK" },
+  { znak: "R", rijec: "Romeo",    izgovor: "RO MIO" },
+  { znak: "S", rijec: "Sierra",   izgovor: "SI ER RA" },
+  { znak: "T", rijec: "Tango",    izgovor: "TAN GO" },
+  { znak: "U", rijec: "Uniform",  izgovor: "JU NI FORM" },
+  { znak: "V", rijec: "Victor",   izgovor: "VIK TOR" },
+  { znak: "W", rijec: "Whiskey",  izgovor: "UIS KI" },
+  { znak: "X", rijec: "X-Ray",    izgovor: "EKS REJ" },
+  { znak: "Y", rijec: "Yankee",   izgovor: "JEN KI" },
+  { znak: "Z", rijec: "Zulu",     izgovor: "ZU LU" },
+  { znak: "0", rijec: "Nadazero",   izgovor: "NA DA ZE RO" },
+  { znak: "1", rijec: "Unaone",     izgovor: "UNA UAN" },
+  { znak: "2", rijec: "Bissotwo",   izgovor: "BIS SO TU" },
+  { znak: "3", rijec: "Terrathree", izgovor: "TE RA TRI" },
+  { znak: "4", rijec: "Kartefour",  izgovor: "KAR TE FOR" },
+  { znak: "5", rijec: "Pantafive",  izgovor: "PAN TA FAJV" },
+  { znak: "6", rijec: "Soxisix",    izgovor: "SO KSI SIKS" },
+  { znak: "7", rijec: "Setteseven", izgovor: "SE TE SEVEN" },
+  { znak: "8", rijec: "Oktoeight",  izgovor: "OK TO EIT" },
+  { znak: "9", rijec: "Novenine",   izgovor: "NO VE NAJN" },
+];
+
+// Riječi za vježbu sricanja (hrvatske riječi koje ćeš sricati po tablici)
+const VJEZBA_RIJECI = [
+  "BROD", "SIDRO", "MORE", "JEDRO", "KARTA", "KOMPAS", "VALOVI",
+  "BURA", "JUGO", "LUKA", "OTOK", "PRAMAC", "KRMA", "KORMILO",
+  "MOTOR", "GORIVO", "PRSLUK", "RADIO", "KANAL", "SPLIT", "RIJEKA",
+  "ZADAR", "JADRAN", "ISPIT", "ISPITANIK", "VODITELJ", "BRODICA",
+  "POMOC", "OPASNOST", "PLOVIDBA", "VJETAR", "SIGURNOST",
+];
